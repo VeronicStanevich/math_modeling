@@ -8,7 +8,6 @@ std::string matrixFilePath = "/Users/admin/CLionProjects/gauss/untitled1/factory
 
 std::vector<std::string> explode(const std::string &delimiter, const std::string &str) {
     std::vector<std::string> arr;
-
     int strleng = str.length();
     int delleng = delimiter.length();
     if (delleng == 0)
@@ -34,21 +33,25 @@ std::vector<std::string> explode(const std::string &delimiter, const std::string
 }
 
 std::vector<double> getSolutions() {
-    std::ifstream inputFileStream(inputAnsFilePath, std::ios::in);
-    std::string line;
-    std::vector<std::string> read;
+    try {
+        std::ifstream inputFileStream(inputAnsFilePath, std::ios::in);
+        std::string line;
+        std::vector<std::string> read;
 
-    while (std::getline(inputFileStream, line)) {
-        read = explode(",", line);
+        while (std::getline(inputFileStream, line)) {
+            read = explode(",", line);
+        }
+
+        std::vector<double> ans;
+        ans.reserve(read.size());
+        for (const auto &str: read) {
+            ans.push_back(std::stod(str));
+        }
+
+        return ans;
+    } catch (std::exception& e) {
+        throw std::invalid_argument("Невозможно прочитать файл y");
     }
-
-    std::vector<double> ans;
-    ans.reserve(read.size());
-    for (const auto &str: read) {
-        ans.push_back(std::stod(str));
-    }
-
-    return ans;
 }
 
 std::vector<double> getSolutionsRand(int n) {
@@ -59,26 +62,27 @@ std::vector<double> getSolutionsRand(int n) {
     }
 
     return ans;
-
 }
 
 std::vector<std::vector<double>> getMatrix() {
-    std::vector<std::vector<double>> matrix;
+    try {
+        std::vector<std::vector<double>> matrix;
+        std::ifstream inputFileStream(matrixFilePath, std::ios::in);
+        std::string line;
 
+        for (int i = 0; std::getline(inputFileStream, line); i++) {
+            matrix.emplace_back();
+            std::vector<std::string> lineVector = explode(",", line);
 
-    std::ifstream inputFileStream(matrixFilePath, std::ios::in);
-    std::string line;
-
-    for (int i = 0; std::getline(inputFileStream, line); i++) {
-        matrix.emplace_back();
-        std::vector<std::string> lineVector = explode(",", line);
-
-        for (const std::string &str: lineVector) {
-            matrix[i].push_back(std::stod(str));
+            for (const std::string &str: lineVector) {
+                matrix[i].push_back(std::stod(str));
+            }
         }
-    }
 
-    return matrix;
+        return matrix;
+    } catch (std::exception& e) {
+        throw std::invalid_argument("Невозможно прочитать файл");
+    }
 }
 
 std::vector<std::vector<double>> getMatrixRand(int n) {

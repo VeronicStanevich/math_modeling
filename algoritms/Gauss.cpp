@@ -1,6 +1,7 @@
 #include "Gauss.h"
 #include <iostream>
 #include <cmath>
+#include <stdexcept>
 
 const double eps = 0.00001;
 
@@ -23,8 +24,7 @@ std::vector<double> evaluateByGauss(std::vector<std::vector<double>> &matrix, st
         // Перестановка строк
         if (max < eps) {
             // нет ненулевых диагональных элементов
-            std::cout << "Решение получить невозможно из-за нулевого столбца ";
-            std::cout << index << " матрицы" << std::endl;
+            throw std::invalid_argument("Решение получить невозможно из-за нулевого столбца ");
         }
         for (int j = 0; j < n; j++) {
             double temp = matrix[k][j];
